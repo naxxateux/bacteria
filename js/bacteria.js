@@ -8,8 +8,6 @@ var margin = {
     height = 900 - margin.bottom - margin.top,
     maxRadius = height / 2,
     sampleCircleRadius = 4,
-    sampleRectWidth = 2,
-    sampleRectHeight = 8,
     defaultSampleNumber = 1,
     animationDuration = 1000,
     sampleColors = {
@@ -217,13 +215,11 @@ var drawBacteriaData = function(bacteriaName, viewType) {
                                 .attr('cy', height / 2)
                                 .attr('visibility', 'hidden');
 
-                            sample.append('rect')
-                                .attr('class', 'sample-rect')
+                            sample.append('circle')
+                                .attr('class', 'sample-circle')
                                 .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(getSampleData(matrix[i][0]).subj_id) + ')')
-                                .attr('x', -sampleRectWidth / 2)
-                                .attr('y', -sampleRectHeight / 2)
-                                .attr('width', sampleRectWidth)
-                                .attr('height', sampleRectHeight)
+                                .attr('cx', 0)
+                                .attr('r', sampleCircleRadius - 1)
                                 .attr('opacity', 0);
                         }
 
@@ -259,14 +255,12 @@ var drawBacteriaData = function(bacteriaName, viewType) {
 
                             for (var j = 1; j < nOfSamples + 1; j++) {
                                 if (matrix[i][j] != '0' & matrix[i][j] != 'NA') {
-                                    sample.append('rect')
-                                        .attr('class', 'sample-rect')
+                                    sample.append('circle')
+                                        .attr('class', 'sample-circle')
                                         .attr('id', j)
                                         .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(getSampleData(matrix[0][j - 1]).subj_id) + ')')
-                                        .attr('x', distance(+matrix[i][j]) - sampleRectWidth / 2)
-                                        .attr('y', -sampleRectHeight / 2)
-                                        .attr('width', sampleRectWidth)
-                                        .attr('height', sampleRectHeight)
+                                        .attr('cx', distance(+matrix[i][j]))
+                                        .attr('r', sampleCircleRadius - 1)
                                         .attr('fill', sampleColors[sampleCountry])
                                         .attr('stroke', sampleColors[sampleCountry])
                                         .on('mouseover', function() {
@@ -332,11 +326,10 @@ var changeOneSampleView = function(sampleNumber) {
             });
 
         if (matrix[sampleNumber][j] != '0' & matrix[sampleNumber][j] != 'NA') {
-            sampleEndDistance = (distance(+matrix[sampleNumber][j]) - sampleRectWidth / 2) * scaleMultiplier;
+            sampleEndDistance = distance(+matrix[sampleNumber][j]) * scaleMultiplier;
             sampleVisibility = sampleEndDistance > maxRadius ? 'hidden' : 'visible';
         } else if (j === sampleNumber) {
             sampleEndDistance = 0;
-            sampleVisibility = 'hidden';
         } else {
             sampleEndDistance = maxRadius + getSampleIndexInSubject(currentSample.sample_name, currentSample.subj_id) * 10;
             sampleColor = '#ffffff';
@@ -347,12 +340,12 @@ var changeOneSampleView = function(sampleNumber) {
             .attr('r', sampleEndDistance)
             .attr('stroke', sampleColor);
 
-        sample.select('.sample-rect')
+        sample.select('.sample-circle')
             .attr('fill', sampleColor)
             .attr('stroke', strokeColor)
             .attr('visibility', sampleVisibility)
             .on('mouseover', function() {
-                var selectedSampleCX = d3.select(this).attr('x');
+                var selectedSampleCX = d3.select(this).attr('cx');
                 var selectedSampleId = +d3.select(this.parentNode).attr('id');
                 var currentSampleName = matrix[0][selectedSampleId - 1]
                 var currentSample = getSampleData(currentSampleName);
@@ -402,7 +395,7 @@ var changeOneSampleView = function(sampleNumber) {
             })
             .transition()
             .duration(animationDuration)
-            .attr('x', sampleEndDistance)
+            .attr('cx', sampleEndDistance)
             .attr('opacity', .5);
     }
 
@@ -467,18 +460,18 @@ var changeScale = function(value) {
 
     d3.select('.samples')
         .selectAll('.sample')
-        .selectAll('.sample-rect')
-        .attr('x', function() {
+        .selectAll('.sample-circle')
+        .attr('cx', function() {
             var matrixValue = matrix[defaultSampleNumber][+d3.select(this.parentNode).attr('id')];
             if (matrixValue === 'NA') {
-                return +d3.select(this).attr('x');
+                return +d3.select(this).attr('cx');
             } else {
-                return (distance(matrixValue) - sampleRectWidth / 2) * value;
+                return distance(matrixValue) * value;
             }
         })
         .attr('visibility', function() {
             var matrixValue = matrix[defaultSampleNumber][+d3.select(this.parentNode).attr('id')];
-            if (+d3.select(this).attr('x') > maxRadius & (matrixValue != 'NA')) {
+            if (+d3.select(this).attr('cx') > maxRadius & (matrixValue != 'NA')) {
                 return 'hidden';
             } else {
                 return 'visible';
