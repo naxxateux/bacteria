@@ -1,0 +1,43 @@
+#select-container {
+    text-align: center;
+    font-family: Source Code Pro;
+    font-size: 11px;
+}
+#view-selector {
+    padding: 1px;
+    background-color: #ffffff;
+    border: 1px solid #e6e6e6;
+    font-family: Source Code Pro;
+    font-size: 11px;
+}
+.row {
+    margin: auto;
+    width: 1020px;
+}
+.column-1 {
+    margin: 30px 0px 0px 30px;
+    width: 300px;
+    float: left;
+}
+.column-2 {
+    margin: 30px 30px 0px 30px;
+    width: 300px;
+    float: left;
+}
+.column-3 {
+    margin: 30px 30px 0px 0px;
+    width: 300px;
+    float: left;
+}
+.caption {
+    margin: 0px 0px 20px 0px;
+    text-align: center;
+    font-family: Source Code Pro;
+    font-size: 12px;
+}
+.image-container {
+    height: 300px;
+    width: 300px;
+    text-align: center;
+    display: none;
+}

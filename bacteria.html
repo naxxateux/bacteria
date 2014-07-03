@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<html>
+
+<head>
+    <script src='http://d3js.org/d3.v3.min.js'></script>
+    <script src='//code.jquery.com/jquery-1.10.2.js'></script>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' type='text/css' href='style/bacteria.css' />
+    <title>Bacteria</title>
+</head>
+
+<body>
+    <div id='loading-container'>
+        <div class='spinner'>
+            <div class='double-bounce1'></div>
+            <div class='double-bounce2'></div>
+        </div>
+    </div>
+    <div id='tooltip' class='hidden'>
+        <p id='sample-name'></p>
+        <p id='sample-location'>
+            <span id='sample-country-full-name'></span>
+            <span id='sample-region'></span>
+        </p>
+        <p id='distance'></p>
+    </div>
+    <div id='tooltip-all-samples' class='hidden'>
+        <p id='sample-name'></p>
+    </div>
+    <div id='select-container'>
+        <label for='bacteria-selector'>Bacteria:</label>
+        <select type='submit' id='bacteria-selector'>
+            <optgroup label='Actinobacteria'>
+                <optgroup label='-Actinobacteria'>
+                    <optgroup label='--Bifidobacteriales'>
+                        <optgroup label='---Bifidobacteriaceae'>
+                            <optgroup label='----Bifidobacterium'>
+                                <option value='Bifidobacterium_adolescentis_ATCC_15703'>Bifidobacterium_adolescentis_ATCC_15703</option>
+                                <option value='Bifidobacterium_bifidum_PRL2010'>Bifidobacterium_bifidum_PRL2010</option>
+                                <option value='Bifidobacterium_breve_DSM_20213'>Bifidobacterium_breve_DSM_20213</option>
+                                <option value='Bifidobacterium_longum_subsp_longum_JDM301'>Bifidobacterium_longum_subsp_longum_JDM301</option>
+                                <option value='Bifidobacterium_pseudocatenulatum_DSM_20438'>Bifidobacterium_pseudocatenulatum_DSM_20438</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                    <optgroup label='--Coriobacteriales'>
+                        <optgroup label='---Coriobacteriaceae'>
+                            <optgroup label='----Collinsella'>
+                                <option value='Collinsella_aerofaciens_ATCC_25986'>Collinsella_aerofaciens_ATCC_25986</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Bacteroidetes'>
+                <optgroup label='-Bacteroidia'>
+                    <optgroup label='--Bacteroidales'>
+                        <optgroup label='---Bacteroidaceae'>
+                            <optgroup label='----Bacteroides'>
+                                <option value='Bacteroides_caccae_ATCC_43185'>Bacteroides_caccae_ATCC_43185</option>
+                                <option value='Bacteroides_cellulosilyticus_DSM_14838'>Bacteroides_cellulosilyticus_DSM_14838</option>
+                                <option value='Bacteroides_clarus_YIT_12056'>Bacteroides_clarus_YIT_12056</option>
+                                <option value='Bacteroides_coprocola_DSM_17136'>Bacteroides_coprocola_DSM_17136</option>
+                                <option value='Bacteroides_coprophilus_DSM_18228'>Bacteroides_coprophilus_DSM_18228</option>
+                                <option value='Bacteroides_dorei_5_1_36_D4'>Bacteroides_dorei_5_1_36_D4</option>
+                                <option value='Bacteroides_eggerthii_1_2_48FAA'>Bacteroides_eggerthii_1_2_48FAA</option>
+                                <option value='Bacteroides_finegoldii_DSM_17565'>Bacteroides_finegoldii_DSM_17565</option>
+                                <option value='Bacteroides_fragilis_3_1_12'>Bacteroides_fragilis_3_1_12</option>
+                                <option value='Bacteroides_fragilis_638R_genome'>Bacteroides_fragilis_638R_genome</option>
+                                <option value='Bacteroides_intestinalis_DSM_17393'>Bacteroides_intestinalis_DSM_17393</option>
+                                <option value='Bacteroides_ovatus_3_8_47FAA'>Bacteroides_ovatus_3_8_47FAA</option>
+                                <option value='Bacteroides_ovatus_ATCC_8483'>Bacteroides_ovatus_ATCC_8483</option>
+                                <option value='Bacteroides_ovatus_SD_CMC'>Bacteroides_ovatus_SD_CMC</option>
+                                <option value='Bacteroides_plebeius_DSM_17135'>Bacteroides_plebeius_DSM_17135</option>
+                                <option value='Bacteroides_sp_3_1_23'>Bacteroides_sp_3_1_23</option>
+                                <option value='Bacteroides_sp_D2'>Bacteroides_sp_D2</option>
+                                <option value='Bacteroides_stercoris_ATCC_43183'>Bacteroides_stercoris_ATCC_43183</option>
+                                <option value='Bacteroides_thetaiotaomicron_VPI_5482'>Bacteroides_thetaiotaomicron_VPI_5482</option>
+                                <option value='Bacteroides_uniformis_ATCC_8492'>Bacteroides_uniformis_ATCC_8492</option>
+                                <option value='Bacteroides_xylanisolvens_XB1A'>Bacteroides_xylanisolvens_XB1A</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Porphyromonadaceae'>
+                            <optgroup label='----Barnesiella'>
+                                <option value='Barnesiella_intestinihominis_YIT_11860'>Barnesiella_intestinihominis_YIT_11860</option>
+                            </optgroup>
+                            <optgroup label='----Odoribacter'>
+                                <option value='Odoribacter_laneus_YIT_12061'>Odoribacter_laneus_YIT_12061</option>
+                                <option value='Odoribacter_splanchnicus_DSM_20712'>Odoribacter_splanchnicus_DSM_20712</option>
+                            </optgroup>
+                            <optgroup label='----Parabacteroides'>
+                                <option value='Parabacteroides_distasonis_ATCC_8503'>Parabacteroides_distasonis_ATCC_8503</option>
+                                <option value='Parabacteroides_johnsonii_DSM_18315'>Parabacteroides_johnsonii_DSM_18315</option>
+                                <option value='Parabacteroides_merdae_ATCC_43184'>Parabacteroides_merdae_ATCC_43184</option>
+                            </optgroup>
+                            <optgroup label='----Tannerella'>
+                                <option value='Tannerella_sp_6_1_58FAA_CT1'>Tannerella_sp_6_1_58FAA_CT1</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Prevotellaceae'>
+                            <optgroup label='----Paraprevotella'>
+                                <option value='Paraprevotella_xylaniphila_YIT_11841'>Paraprevotella_xylaniphila_YIT_11841</option>
+                            </optgroup>
+                            <optgroup label='----Prevotella'>
+                                <option value='Prevotella_copri_DSM_18205'>Prevotella_copri_DSM_18205</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Rikenellaceae'>
+                            <optgroup label='----Alistipes'>
+                                <option value='Alistipes_indistinctus_YIT_12060'>Alistipes_indistinctus_YIT_12060</option>
+                                <option value='Alistipes_onderdonkii_DSM_19147'>Alistipes_onderdonkii_DSM_19147</option>
+                                <option value='Alistipes_putredinis_DSM_17216'>Alistipes_putredinis_DSM_17216</option>
+                                <option value='Alistipes_shahii_WAL_8301'>Alistipes_shahii_WAL_8301</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Euryarchaeota'>
+                <optgroup label='-Methanobacteria'>
+                    <optgroup label='--Methanobacteriales'>
+                        <optgroup label='---Methanobacteriaceae'>
+                            <optgroup label='----Methanobrevibacter'>
+                                <option value='Methanobrevibacter_smithii_ATCC_35061'>Methanobrevibacter_smithii_ATCC_35061</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Firmicutes'>
+                <optgroup label='-Clostridia'>
+                    <optgroup label='--Clostridiales'>
+                        <optgroup label='---Clostridiaceae'>
+                            <optgroup label='----Anaerostipes'>
+                                <option value='Clostridium_sp_SS2_1'>Clostridium_sp_SS2_1</option>
+                            </optgroup>
+                            <optgroup label='----Clostridium'>
+                                <option value='Clostridium_bolteae_ATCC_BAA_613'>Clostridium_bolteae_ATCC_BAA_613</option>
+                                <option value='Clostridium_symbiosum_WAL_14163'>Clostridium_symbiosum_WAL_14163</option>
+                            </optgroup>
+                            <optgroup label='----Coprococcus'>
+                                <option value='Clostridium_sp_L2_50'>Clostridium_sp_L2_50</option>
+                            </optgroup>
+                            <optgroup label='----Lachnospiraceae'>
+                                <option value='Clostridium_nexile_DSM_1787'>Clostridium_nexile_DSM_1787</option>
+                            </optgroup>
+                            <optgroup label='----Ruminococcaceae'>
+                                <option value='Clostridium_leptum_DSM_753'>Clostridium_leptum_DSM_753</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Clostridiales'>
+                            <optgroup label='----Clostridiales'>
+                                <option value='Clostridiales_sp_SS3_4'>Clostridiales_sp_SS3_4</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Eubacteriaceae'>
+                            <optgroup label='----Eubacterium'>
+                                <option value='Eubacterium_biforme_DSM_3989'>Eubacterium_biforme_DSM_3989</option>
+                                <option value='Eubacterium_siraeum_70_3'>Eubacterium_siraeum_70_3</option>
+                            </optgroup>
+                            <optgroup label='----Lachnospiraceae'>
+                                <option value='Eubacterium_eligens_ATCC_27750'>Eubacterium_eligens_ATCC_27750</option>
+                                <option value='Eubacterium_hallii_DSM_3353'>Eubacterium_hallii_DSM_3353</option>
+                                <option value='Eubacterium_ventriosum_ATCC_27560'>Eubacterium_ventriosum_ATCC_27560</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Lachnospiraceae'>
+                            <optgroup label='----Anaerostipes'>
+                                <option value='Anaerostipes_hadrus_DSM_3319'>Anaerostipes_hadrus_DSM_3319</option>
+                            </optgroup>
+                            <optgroup label='----Blautia'>
+                                <option value='Blautia_wexlerae_AGR2146'>Blautia_wexlerae_AGR2146</option>
+                            </optgroup>
+                            <optgroup label='----Coprococcus'>
+                                <option value='Coprococcus_catus_GD_7'>Coprococcus_catus_GD_7</option>
+                                <option value='Coprococcus_comes_ATCC_27758'>Coprococcus_comes_ATCC_27758</option>
+                                <option value='Coprococcus_eutactus_ATCC_27759'>Coprococcus_eutactus_ATCC_27759</option>
+                                <option value='Coprococcus_sp_ART55_1'>Coprococcus_sp_ART55_1</option>
+                            </optgroup>
+                            <optgroup label='----Dorea'>
+                                <option value='Dorea_longicatena_DSM_13814'>Dorea_longicatena_DSM_13814</option>
+                            </optgroup>
+                            <optgroup label='----Lachnospiraceae'>
+                                <option value='Bacteroides_pectinophilus_ATCC_43243'>Bacteroides_pectinophilus_ATCC_43243</option>
+                                <option value='Butyrivibrio_crossotus_DSM_2876'>Butyrivibrio_crossotus_DSM_2876</option>
+                            </optgroup>
+                            <optgroup label='----Roseburia'>
+                                <option value='Roseburia_hominis_A2_183'>Roseburia_hominis_A2_183</option>
+                                <option value='Roseburia_intestinalis_XB6B4'>Roseburia_intestinalis_XB6B4</option>
+                                <option value='Roseburia_inulinivorans_DSM_16841'>Roseburia_inulinivorans_DSM_16841</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Ruminococcaceae'>
+                            <optgroup label='----Anaerotruncus'>
+                                <option value='Anaerotruncus_colihominis_DSM_17241'>Anaerotruncus_colihominis_DSM_17241</option>
+                            </optgroup>
+                            <optgroup label='----Blautia'>
+                                <option value='Ruminococcus_obeum_A2_162'>Ruminococcus_obeum_A2_162</option>
+                                <option value='Ruminococcus_sp_5_1_39BFAA'>Ruminococcus_sp_5_1_39BFAA</option>
+                                <option value='Ruminococcus_sp_SR1_5'>Ruminococcus_sp_SR1_5</option>
+                            </optgroup>
+                            <optgroup label='----Faecalibacterium'>
+                                <option value='Faecalibacterium_cf_prausnitzii_KLE1255'>Faecalibacterium_cf_prausnitzii_KLE1255</option>
+                                <option value='Faecalibacterium_prausnitzii_A2_165'>Faecalibacterium_prausnitzii_A2_165</option>
+                                <option value='Faecalibacterium_prausnitzii_L2_6'>Faecalibacterium_prausnitzii_L2_6</option>
+                                <option value='Faecalibacterium_prausnitzii_SL3_3'>Faecalibacterium_prausnitzii_SL3_3</option>
+                            </optgroup>
+                            <optgroup label='----Lachnospiraceae'>
+                                <option value='Ruminococcus_lactaris_ATCC_29176'>Ruminococcus_lactaris_ATCC_29176</option>
+                                <option value='Ruminococcus_torques_ATCC_27756'>Ruminococcus_torques_ATCC_27756</option>
+                                <option value='Ruminococcus_torques_L2_14'>Ruminococcus_torques_L2_14</option>
+                            </optgroup>
+                            <optgroup label='----Ruminococcus'>
+                                <option value='Ruminococcus_bromii_L2_63'>Ruminococcus_bromii_L2_63</option>
+                                <option value='Ruminococcus_gnavus_ATCC_29149'>Ruminococcus_gnavus_ATCC_29149</option>
+                            </optgroup>
+                            <optgroup label='----Subdoligranulum'>
+                                <option value='Subdoligranulum_sp_4_3_54A2FAA'>Subdoligranulum_sp_4_3_54A2FAA</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Veillonellaceae'>
+                            <optgroup label='----Veillonella'>
+                                <option value='Veillonella_parvula_DSM_2008'>Veillonella_parvula_DSM_2008</option>
+                                <option value='Veillonella_sp_6_1_27'>Veillonella_sp_6_1_27</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Firmicutes'>
+                <optgroup label='-Erysipelotrichi'>
+                    <optgroup label='--Erysipelotrichales'>
+                        <optgroup label='---Erysipelotrichaceae'>
+                            <optgroup label='----Catenibacterium'>
+                                <option value='Catenibacterium_mitsuokai_DSM_15897'>Catenibacterium_mitsuokai_DSM_15897</option>
+                            </optgroup>
+                            <optgroup label='----Eubacterium'>
+                                <option value='Erysipelotrichaceae_bacterium_5_2_54FAA'>Erysipelotrichaceae_bacterium_5_2_54FAA</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+                <optgroup label='-Erysipelotrichia'>
+                    <optgroup label='--Erysipelotrichales'>
+                        <optgroup label='---Erysipelotrichaceae'>
+                            <optgroup label='----Coprobacillus'>
+                                <option value='Coprobacillus_sp_8_2_54BFAA'>Coprobacillus_sp_8_2_54BFAA</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+                <optgroup label='-Negativicutes'>
+                    <optgroup label='--Selenomonadales'>
+                        <optgroup label='---Acidaminococcaceae'>
+                            <optgroup label='----Acidaminococcus'>
+                                <option value='Acidaminococcus_intestini_RyC_MR95'>Acidaminococcus_intestini_RyC_MR95</option>
+                                <option value='Acidaminococcus_sp_D21'>Acidaminococcus_sp_D21</option>
+                            </optgroup>
+                            <optgroup label='----Phascolarctobacterium'>
+                                <option value='Phascolarctobacterium_sp_YIT_12067'>Phascolarctobacterium_sp_YIT_12067</option>
+                            </optgroup>
+                        </optgroup>
+                        <optgroup label='---Veillonellaceae'>
+                            <optgroup label='----Dialister'>
+                                <option value='Dialister_invisus_DSM_15470'>Dialister_invisus_DSM_15470</option>
+                                <option value='Dialister_succinatiphilus_YIT_11850'>Dialister_succinatiphilus_YIT_11850</option>
+                            </optgroup>
+                            <optgroup label='----Megamonas'>
+                                <option value='Megamonas_hypermegale'>Megamonas_hypermegale</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Fusobacteria'>
+                <optgroup label='-Fusobacteria'>
+                    <optgroup label='--Fusobacteriales'>
+                        <optgroup label='---Fusobacteriaceae'>
+                            <optgroup label='----Fusobacterium'>
+                                <option value='Fusobacterium_mortiferum_ATCC_9817'>Fusobacterium_mortiferum_ATCC_9817</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Proteobacteria'>
+                <optgroup label='-Betaproteobacteria'>
+                    <optgroup label='--Burkholderiales'>
+                        <optgroup label='---Sutterellaceae'>
+                            <optgroup label='----Parasutterella'>
+                                <option value='Parasutterella_excrementihominis_YIT_11859'>Parasutterella_excrementihominis_YIT_11859</option>
+                            </optgroup>
+                            <optgroup label='----Sutterella'>
+                                <option value='Sutterella_wadsworthensis_2_1_59BFAA'>Sutterella_wadsworthensis_2_1_59BFAA</option>
+                                <option value='Sutterella_wadsworthensis_3_1_45B'>Sutterella_wadsworthensis_3_1_45B
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+                <optgroup label='-Deltaproteobacteria'>
+                    <optgroup label='--Desulfovibrionales'>
+                        <optgroup label='---Desulfovibrionaceae'>
+                            <optgroup label='----Bilophila'>
+                                <option value='Bilophila_wadsworthia_3_1_6'>Bilophila_wadsworthia_3_1_6</option>
+                            </optgroup>
+                            <optgroup label='----Desulfovibrio'>
+                                <option value='Desulfovibrio_piger_ATCC_29098'>Desulfovibrio_piger_ATCC_29098</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+                <optgroup label='-Gammaproteobacteria'>
+                    <optgroup label='--Enterobacteriales'>
+                        <optgroup label='---Enterobacteriaceae'>
+                            <optgroup label='----Escherichia/Shigella'>
+                                <option value='Escherichia_coli_str_K12_substr_MG1655'>Escherichia_coli_str_K12_substr_MG1655</option>
+                                <option value='Escherichia_sp_1_1_43'>Escherichia_sp_1_1_43</option>
+                            </optgroup>
+                            <optgroup label='----Klebsiella'>
+                                <option value='Klebsiella_pneumoniae_342'>Klebsiella_pneumoniae_342</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                    <optgroup label='--Pasteurellales'>
+                        <optgroup label='---Pasteurellaceae'>
+                            <optgroup label='----Haemophilus'>
+                                <option value='Haemophilus_parainfluenzae_ATCC_33392'>Haemophilus_parainfluenzae_ATCC_33392</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+            <optgroup label='Verrucomicrobia'>
+                <optgroup label='-Verrucomicrobiae'>
+                    <optgroup label='--Verrucomicrobiales'>
+                        <optgroup label='---Verrucomicrobiaceae'>
+                            <optgroup label='----Akkermansia'>
+                                <option value='Akkermansia_muciniphila_ATCC_BAA_835'>Akkermansia_muciniphila_ATCC_BAA_835</option>
+                            </optgroup>
+                        </optgroup>
+                    </optgroup>
+                </optgroup>
+            </optgroup>
+        </select>
+        <label for='view-selector'>View:</label>
+        <select type='submit' id='view-selector'>
+            <option value='ONE' selected='selected'>One sample</option>
+            <optgroup label='All samples'>
+                <option value='ALL'>All regions</option>
+                <option value='CHN'>China</option>
+                <option value='EUR'>Europe</option>
+                <option value='RUS'>Russia</option>
+                <option value='USA'>USA</option>
+            </optgroup>
+        </select>
+    </div>
+    <div id='back-container'>
+        <p>&#8592; <a href='index.html'>All bacteria</a>
+        </p>
+    </div>
+    <div id='chart'></div>
+    <div id='slider-container'>
+        <p id='scale-text'></p>
+        <input type='range' id='scale-slider' min='1' step='0.5' max='5' value='1'>
+    </div>
+    <script>
+    var margin = {
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100
+    },
+        width = 1200 - margin.right - margin.left,
+        height = 900 - margin.bottom - margin.top,
+        maxRadius = height / 2,
+        sampleCircleRadius = 4,
+        sampleRectWidth = 2,
+        sampleRectHeight = 8,
+        defaultSampleNumber = 1,
+        animationDuration = 1000,
+        sampleColors = {
+            'RUS': '#538d2e',
+            'CHN': '#82362d',
+            'USA': '#592b76',
+            'EUR': '#2a646b',
+        };
+
+    var svg;
+
+    var nOfSamples,
+        nOfSubjects,
+        samplesData,
+        matrix,
+        matrixMaxValue;
+
+    var distance,
+        angle;
+
+    var samples,
+        allSamples;
+
+    // Read sample_info.tsv
+    d3.tsv('data/sample_info.tsv', function(error, data) {
+        if (error) {
+            console.log(error);
+        } else {
+            samplesData = data;
+            nOfSamples = data.length;
+            nOfSubjects = d3.max(samplesData, function(d) {
+                return +d.subj_id;
+            });
+
+            // Angle scale
+            angle = d3.scale.linear()
+                .domain([1, nOfSubjects + 1])
+                .range([0, 360]);
+
+            // Initial svg
+            svg = d3.select('#chart').append('svg')
+                .attr('id', 'svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+            // Draw utility circles
+            var utilityCircles = svg.append('g')
+                .attr('class', 'utility-circles');
+
+            utilityCircles.append('circle')
+                .attr('id', 'utility-circle')
+                .attr('cx', width / 2)
+                .attr('cy', height / 2)
+                .attr('r', maxRadius)
+                .attr('stroke-width', 2);
+
+            // Draw utility lines
+            var utilityLines = svg.append('g')
+                .attr('class', 'utility-lines');
+
+            for (var i = 1; i < nOfSubjects + 1; i++) {
+                utilityLines.append('line')
+                    .attr('class', 'utility-line')
+                    .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(i) + ')')
+                    .attr('x2', maxRadius);
+            }
+
+            // Draw selected bacteria data
+            var bacteriaSelector = document.getElementById('bacteria-selector');
+            var bacteriaName = window.location.toString().split('?name=')[1].split('&')[0];
+            bacteriaSelector.value = bacteriaName;
+
+            var viewSelector = document.getElementById('view-selector');
+            var view = window.location.toString().split('&view=')[1];
+            viewSelector.value = view;
+
+            drawBacteriaData(d3.select('#bacteria-selector').property('value'), d3.select('#view-selector').property('value'));
+        }
+    });
+
+    var drawBacteriaData = function(bacteriaName, viewType) {
+        // Get center coordinates for loading circles animation
+        var centerCoordinates = document.getElementById('svg').getScreenCTM();
+
+        $('.spinner').css('top', centerCoordinates.f + (height + margin.top + margin.bottom) / 2 - 15);
+        $('.spinner').css('left', centerCoordinates.e + (width + margin.left + margin.right) / 2 - 15);
+        $('#loading-container').css('display', 'block');
+
+        // Start drawing data after little timeout
+        setTimeout(function() {
+            d3.text('data/bacteries/' + bacteriaName + '.tsv', function(error, data) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    // Parse bacteria data file
+                    matrix = d3.tsv.parseRows(data).map(function(row) {
+                        return row.map(function(value) {
+                            return value;
+                        });
+                    });
+
+                    // Create distance scale according to matrix maximum value
+                    matrixMaxValue = d3.max(matrix, function(array) {
+                        return d3.max(array, Number);
+                    });
+
+                    distance = d3.scale.linear()
+                        .domain([0, matrixMaxValue])
+                        .range([0, maxRadius]);
+
+                    // Sort matrix
+                    matrix[0].unshift('0');
+                    sortMatrixByCountry();
+                    matrix = transpose(matrix);
+                    sortMatrixByCountry();
+                    matrix[0].shift();
+
+                    // Draw legend
+                    if (d3.select('.legend').empty()) {
+                        var legend = svg.append('g')
+                            .attr('class', 'legend');
+
+                        var startAngle = Math.PI / 2;
+                        var endAngle = Math.PI / 2;
+                        var middleAngle = Math.PI / 2;
+                        var subjIds = [];
+
+                        subjIds.push(+samplesData[0].subj_id);
+
+                        for (var i = 1; i < nOfSamples; i++) {
+                            if (samplesData[i].country != samplesData[i - 1].country || samplesData[i].region != samplesData[i - 1].region || i === nOfSamples - 1) {
+                                var maxSubjId = d3.max(subjIds);
+                                endAngle = angle(maxSubjId) * (Math.PI / 180) + Math.PI / 2;
+                                middleAngle = startAngle + (endAngle - startAngle) / 2 - Math.PI / 2;
+
+                                var arc = d3.svg.arc()
+                                    .innerRadius(maxRadius + 50)
+                                    .outerRadius(maxRadius + 50.3)
+                                    .startAngle(startAngle)
+                                    .endAngle(endAngle);
+
+                                legend.append('path')
+                                    .attr('d', arc)
+                                    .attr('fill', 'none')
+                                    .attr('stroke', sampleColors[samplesData[i - 1].country])
+                                    .attr('stroke-width', .3)
+                                    .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ')');
+
+                                legend.append('text')
+                                    .attr('class', 'legend-text')
+                                    .attr('x', width / 2 + (maxRadius + 60) * Math.cos(middleAngle))
+                                    .attr('y', height / 2 + (maxRadius + 60) * Math.sin(middleAngle))
+                                    .attr('text-anchor', function() {
+                                        if ((middleAngle > 0 & middleAngle < Math.PI / 2) || (middleAngle > 1.5 * Math.PI & middleAngle < 2 * Math.PI)) {
+                                            return 'start';
+                                        } else {
+                                            return 'end';
+                                        }
+                                    })
+                                    .attr('fill', sampleColors[samplesData[i - 1].country])
+                                    .text(function() {
+                                        if (samplesData[i - 1].region === 'NA') {
+                                            return samplesData[i - 1].country;
+                                        } else {
+                                            return samplesData[i - 1].region;
+                                        }
+                                    });
+
+                                startAngle = angle(maxSubjId + 1) * (Math.PI / 180) + Math.PI / 2;
+                                subjIds = [];
+                            }
+                            subjIds.push(+samplesData[i].subj_id);
+                        }
+                    }
+
+                    // Draw selected viewType
+                    if (viewType === 'ONE') {
+                        d3.select('.all-samples').remove();
+
+                        d3.select('#slider-container').select('#scale-text')
+                            .text(matrixMaxValue);
+
+                        $('#slider-container').css('display', 'block');
+
+                        // Draw blanks
+                        if (d3.select('.samples').empty()) {
+                            samples = svg.append('g')
+                                .attr('class', 'samples');
+
+                            samples.append('path')
+                                .attr('class', 'current-sample-tooltip')
+                                .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ')')
+                                .attr('d', 'M0.5,-6.5l5,-5H100v-50H-100v50H-5Z');
+
+                            for (var i = 1; i < nOfSamples + 1; i++) {
+                                var sample = samples.append('g')
+                                    .attr('class', 'sample')
+                                    .attr('id', i);
+
+                                sample.append('circle')
+                                    .attr('class', 'tooltip-circle')
+                                    .attr('cx', width / 2)
+                                    .attr('cy', height / 2)
+                                    .attr('visibility', 'hidden');
+
+                                sample.append('rect')
+                                    .attr('class', 'sample-rect')
+                                    .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(getSampleData(matrix[i][0]).subj_id) + ')')
+                                    .attr('x', -sampleRectWidth / 2)
+                                    .attr('y', -sampleRectHeight / 2)
+                                    .attr('width', sampleRectWidth)
+                                    .attr('height', sampleRectHeight)
+                                    .attr('opacity', 0);
+                            }
+
+                            samples.append('circle')
+                                .attr('class', 'current-sample')
+                                .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ')')
+                                .attr('r', sampleCircleRadius);
+
+                            samples.append('line')
+                                .attr('class', 'current-sample-line');
+                        }
+
+                        // Change samples positions and colors
+                        changeOneSampleView(defaultSampleNumber);
+                        $('#loading-container').css('display', 'none');
+                    } else {
+                        d3.select('.samples').remove();
+                        $('#slider-container').css('display', 'none');
+
+                        // Draw all samples
+                        if (d3.select('.all-samples').empty()) {
+                            allSamples = svg.append('g')
+                                .attr('class', 'all-samples');
+
+                            for (var i = 1; i < nOfSamples + 1; i++) {
+                                var sampleCountry = getSampleData(matrix[i][0]).country;
+
+                                var sample = allSamples.append('g')
+                                    .attr('class', sampleCountry)
+                                    .attr('id', i)
+                                    .attr('visibility', 'hidden')
+                                    .attr('opacity', .3);
+
+                                for (var j = 1; j < nOfSamples + 1; j++) {
+                                    if (matrix[i][j] != '0' & matrix[i][j] != 'NA') {
+                                        sample.append('rect')
+                                            .attr('class', 'sample-rect')
+                                            .attr('id', j)
+                                            .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(getSampleData(matrix[0][j - 1]).subj_id) + ')')
+                                            .attr('x', distance(+matrix[i][j]) - sampleRectWidth / 2)
+                                            .attr('y', -sampleRectHeight / 2)
+                                            .attr('width', sampleRectWidth)
+                                            .attr('height', sampleRectHeight)
+                                            .attr('fill', sampleColors[sampleCountry])
+                                            .attr('stroke', sampleColors[sampleCountry])
+                                            .on('mouseover', function() {
+                                                var selectedSampleId = +d3.select(this).attr('id');
+                                                var currentSampleName = matrix[0][selectedSampleId - 1];
+
+                                                d3.select(this).attr('opacity', 1);
+
+                                                // Update the tooltip position and value
+                                                d3.select('#tooltip-all-samples')
+                                                    .style('top', (d3.event.pageY - 50) + 'px')
+                                                    .style('left', (d3.event.pageX - 70) + 'px')
+                                                    .classed('hidden', false);
+                                                d3.select('#tooltip-all-samples').select('#sample-name')
+                                                    .text(currentSampleName);
+                                            })
+                                            .on('mousemove', function() {
+                                                // Update the tooltip position
+                                                d3.select('#tooltip-all-samples')
+                                                    .style('top', (d3.event.pageY - 50) + 'px')
+                                                    .style('left', (d3.event.pageX - 70) + 'px');
+                                            })
+                                            .on('mouseout', function() {
+                                                // Remove tooltip and make sample normal again
+                                                d3.select(this).attr('opacity', .5);
+                                                d3.select('#tooltip-all-samples').classed('hidden', true);
+                                            })
+                                            .on('click', function() {
+                                                var selectedSampleId = +d3.select(this).attr('id');
+                                                var viewSelector = document.getElementById('view-selector');
+                                                defaultSampleNumber = selectedSampleId;
+                                                viewSelector.value = 'ONE';
+                                                drawBacteriaData(d3.select('#bacteria-selector').property('value'), d3.select('#view-selector').property('value'));
+                                            });
+                                    }
+                                }
+                            }
+                        }
+
+                        // Hide or show samples according to the viewType
+                        changeAllSamplesView(viewType);
+                        $('#loading-container').css('display', 'none');
+                    }
+                }
+            });
+        }, 1000);
+    }
+
+    var changeOneSampleView = function(sampleNumber) {
+        var scaleMultiplier = d3.select('#scale-slider').property('value');
+
+        // Change samples locations
+        for (var j = 1; j < nOfSamples + 1; j++) {
+            var currentSample = getSampleData(matrix[0][j - 1]);
+            var sampleEndDistance;
+            var sampleColor = sampleColors[getSampleData(matrix[0][j - 1]).country];
+            var strokeColor = isSampleActive(j) ? sampleColor : '#e6e6e6';
+            var sampleVisibility;
+
+            var sample = d3.selectAll('.sample')
+                .filter(function() {
+                    return +this.getAttribute('id') === j;
+                });
+
+            if (matrix[sampleNumber][j] != '0' & matrix[sampleNumber][j] != 'NA') {
+                sampleEndDistance = (distance(+matrix[sampleNumber][j]) - sampleRectWidth / 2) * scaleMultiplier;
+                sampleVisibility = sampleEndDistance > maxRadius ? 'hidden' : 'visible';
+            } else if (j === sampleNumber) {
+                sampleEndDistance = 0;
+                sampleVisibility = 'hidden';
+            } else {
+                sampleEndDistance = maxRadius + getSampleIndexInSubject(currentSample.sample_name, currentSample.subj_id) * 10;
+                sampleColor = '#ffffff';
+                sampleVisibility = 'visible';
+            }
+
+            sample.select('.tooltip-circle')
+                .attr('r', sampleEndDistance)
+                .attr('stroke', sampleColor);
+
+            sample.select('.sample-rect')
+                .attr('fill', sampleColor)
+                .attr('stroke', strokeColor)
+                .attr('visibility', sampleVisibility)
+                .on('mouseover', function() {
+                    var selectedSampleCX = d3.select(this).attr('x');
+                    var selectedSampleId = +d3.select(this.parentNode).attr('id');
+                    var currentSampleName = matrix[0][selectedSampleId - 1]
+                    var currentSample = getSampleData(currentSampleName);
+
+                    d3.select(this).attr('opacity', 1);
+
+                    // Show tooltip circle
+                    d3.select(this.parentNode.firstChild).attr('visibility', function() {
+                        if (selectedSampleCX > maxRadius) {
+                            return 'hidden';
+                        } else {
+                            return 'visible';
+                        }
+                    });
+
+                    // Update the tooltip position and value
+                    d3.select('#tooltip')
+                        .style('top', (d3.event.pageY - 100) + 'px')
+                        .style('left', (d3.event.pageX - 70) + 'px')
+                        .classed('hidden', false);
+                    d3.select('#tooltip').select('#sample-name')
+                        .text(currentSampleName);
+                    d3.select('#tooltip').select('#sample-country-full-name')
+                        .text(currentSample.country_full_name + ' ');
+                    d3.select('#tooltip').select('#sample-region')
+                        .text('(' + currentSample.region + ')');
+                    d3.select('#tooltip').select('#distance')
+                        .text(matrix[sampleNumber][selectedSampleId]);
+                })
+                .on('mousemove', function() {
+                    // Update the tooltip position
+                    d3.select('#tooltip')
+                        .style('top', (d3.event.pageY - 100) + 'px')
+                        .style('left', (d3.event.pageX - 70) + 'px');
+                })
+                .on('mouseout', function() {
+                    // Remove tooltip and make sample normal again
+                    d3.select(this).attr('opacity', .5);
+                    d3.select(this.parentNode.firstChild).attr('visibility', 'hidden');
+                    d3.select('#tooltip').classed('hidden', true);
+                })
+                .on('click', function() {
+                    // Change all samples positions recursively
+                    var selectedSampleId = +d3.select(this.parentNode).attr('id');
+                    defaultSampleNumber = selectedSampleId;
+                    changeOneSampleView(selectedSampleId);
+                })
+                .transition()
+                .duration(animationDuration)
+                .attr('x', sampleEndDistance)
+                .attr('opacity', .5);
+        }
+
+        // Draw sample in the center
+        d3.select('.current-sample')
+            .attr('fill', sampleColors[getSampleData(matrix[0][sampleNumber - 1]).country])
+            .attr('opacity', 0)
+            .transition()
+            .delay(animationDuration)
+            .duration(0)
+            .attr('opacity', 1);
+
+        d3.select('.current-sample-tooltip-text-name').remove();
+        d3.select('.current-sample-tooltip-text-location').remove();
+
+        samples.insert('text', 'g')
+            .attr('class', 'current-sample-tooltip-text-name')
+            .attr('x', width / 2)
+            .attr('y', height / 2 - 50)
+            .text(matrix[0][sampleNumber - 1]);
+
+        samples.insert('text', 'g')
+            .attr('class', 'current-sample-tooltip-text-location')
+            .attr('x', width / 2)
+            .attr('y', height / 2 - 30)
+            .text(getSampleData(matrix[0][sampleNumber - 1]).country_full_name + ' (' + getSampleData(matrix[0][sampleNumber - 1]).region + ')');
+
+        // Draw selected sample line
+        d3.select('.current-sample-line')
+            .attr('transform', 'translate(' + width / 2 + ', ' + height / 2 + ') rotate(' + angle(getSampleData(matrix[0][sampleNumber - 1]).subj_id) + ')')
+            .attr('x2', 0)
+            .attr('stroke', sampleColors[getSampleData(matrix[0][sampleNumber - 1]).country])
+            .transition()
+            .duration(animationDuration)
+            .attr('x2', maxRadius);
+    }
+
+    var changeAllSamplesView = function(viewType) {
+        if (viewType === 'ALL') {
+            // Show all samples
+            d3.select('.all-samples')
+                .selectAll('g')
+                .attr('visibility', 'visible');
+
+        } else {
+            // Show only selected country samples
+            d3.select('.all-samples')
+                .selectAll('g')
+                .attr('visibility', function() {
+                    if (this.getAttribute('class') === viewType) {
+                        return 'visible';
+                    } else {
+                        return 'hidden';
+                    }
+                });
+        }
+    }
+
+    var changeScale = function(value) {
+        d3.select('#slider-container').select('#scale-text')
+            .text(matrixMaxValue / value);
+
+        d3.select('.samples')
+            .selectAll('.sample')
+            .selectAll('.sample-rect')
+            .attr('x', function() {
+                var matrixValue = matrix[defaultSampleNumber][+d3.select(this.parentNode).attr('id')];
+                if (matrixValue === 'NA') {
+                    return +d3.select(this).attr('x');
+                } else {
+                    return (distance(matrixValue) - sampleRectWidth / 2) * value;
+                }
+            })
+            .attr('visibility', function() {
+                var matrixValue = matrix[defaultSampleNumber][+d3.select(this.parentNode).attr('id')];
+                if (+d3.select(this).attr('x') > maxRadius & (matrixValue != 'NA')) {
+                    return 'hidden';
+                } else {
+                    return 'visible';
+                }
+            });
+
+        d3.select('.samples')
+            .selectAll('.sample')
+            .selectAll('.tooltip-circle')
+            .attr('r', function() {
+                var matrixValue = matrix[defaultSampleNumber][+d3.select(this.parentNode).attr('id')];
+                if (matrixValue === 'NA') {
+                    return +d3.select(this).attr('r');
+                } else {
+                    return distance(matrixValue) * value;
+                }
+            });
+    }
+
+    var getSampleData = function(sampleName) {
+        for (var i = 0; i < samplesData.length; i++) {
+            if (samplesData[i].sample_name === sampleName) {
+                return samplesData[i];
+            }
+        }
+        return {
+            sample_name: '0',
+            group: '0',
+            country: '0',
+            country_full_name: '0',
+            region: '1',
+            subj_id: '0',
+            run_id: '0',
+            family: '0',
+            disorder: '0'
+        };
+    }
+
+    var isSampleActive = function(sampleIndex) {
+        for (var i = 1; i < nOfSamples + 1; i++) {
+            if (matrix[i][sampleIndex] != '0' & matrix[i][sampleIndex] != 'NA') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var getSampleIndexInSubject = function(sampleName, sampleSubj) {
+        var result = 0;
+        for (var i = 0; i < nOfSamples; i++) {
+            if (samplesData[i].subj_id === sampleSubj) {
+                result++;
+                if (samplesData[i].sample_name === sampleName) {
+                    return result;
+                }
+            }
+        }
+        return result;
+    }
+
+    var sortMatrixByCountry = function() {
+        matrix = matrix.sort(function(a, b) {
+            if (getSampleData(a[0]).country > getSampleData(b[0]).country) {
+                return 1;
+            } else if (getSampleData(a[0]).country < getSampleData(b[0]).country) {
+                return -1;
+            } else if (getSampleData(a[0]).sample_name > getSampleData(b[0]).sample_name) {
+                return 1;
+            } else if (getSampleData(a[0]).sample_name < getSampleData(b[0]).sample_name) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    var transpose = function(a) {
+        return Object.keys(a[0]).map(function(c) {
+            return a.map(function(r) {
+                return r[c];
+            });
+        });
+    }
+
+    // Bacteria selector handler
+    d3.select('#bacteria-selector').on('change', function() {
+        // Set slider value to default when changing bacteria
+        var scaleSlider = document.getElementById('scale-slider');
+        scaleSlider.value = 1;
+
+        // Remove old samples
+        d3.select('.all-samples').remove();
+
+        // Draw new bacteria data
+        return drawBacteriaData(this.value, d3.select('#view-selector').property('value'));
+    });
+
+    // View selector handler
+    d3.select('#view-selector').on('change', function() {
+        // Draw new view data
+        return drawBacteriaData(d3.select('#bacteria-selector').property('value'), this.value);
+    });
+
+    // Scale slider handler
+    d3.select('#scale-slider').on('change', function() {
+        // Change scale on move
+        return changeScale(this.value);
+    });
+    </script>
+
+</body>
+
+</html>
