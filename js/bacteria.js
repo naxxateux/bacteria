@@ -31,13 +31,51 @@ var distance,
 var samples,
     allSamples;
 
+// Fill bacteria-selector
+d3.tsv('data/bacts.tsv', function(error, data) {
+    if (error) {
+        console.log(error);
+    } else {
+        data.forEach(function(bacteria) {
+            var placement;
+
+            if ($('#bacteria-selector optgroup[label=' + bacteria.phylum + ']').length === 0) {
+                $('#bacteria-selector').append('<optgroup label="' + bacteria.phylum + '">');
+            }
+            placement = $('optgroup[label=' + bacteria.phylum + ']');
+
+            if ($('#bacteria-selector optgroup[label=-' + bacteria.class + ']').length === 0) {
+                placement.append('<optgroup label="-' + bacteria.class + '">');
+            }
+            placement = $('optgroup[label=-' + bacteria.class + ']');
+
+            if ($('#bacteria-selector optgroup[label=--' + bacteria.order + ']').length === 0) {
+                placement.append('<optgroup label="--' + bacteria.order + '">');
+            }
+            placement = $('optgroup[label=--' + bacteria.order + ']');
+
+            if ($('#bacteria-selector optgroup[label=---' + bacteria.family + ']').length === 0) {
+                placement.append('<optgroup label="---' + bacteria.family + '">');
+            }
+            placement = $('optgroup[label=---' + bacteria.family + ']');
+
+            if ($('#bacteria-selector optgroup[label=----' + bacteria.genus + ']').length === 0) {
+                placement.append('<optgroup label="----' + bacteria.genus + '">');
+            }
+            placement = $('optgroup[label=----' + bacteria.genus + ']');
+
+            placement.append('<option label="' + bacteria.org + '">' + bacteria.org + '</option>');
+        });
+    }
+});
+
 // Read sample_info.tsv
 d3.tsv('data/sample_info.tsv', function(error, data) {
     if (error) {
         console.log(error);
     } else {
         samplesData = data;
-        nOfSamples = data.length;
+        nOfSamples = samplesData.length;
         nOfSubjects = d3.max(samplesData, function(d) {
             return +d.subj_id;
         });
@@ -79,18 +117,23 @@ d3.tsv('data/sample_info.tsv', function(error, data) {
 
         // Draw selected bacteria data
         var bacteriaSelector = document.getElementById('bacteria-selector');
-        var bacteriaName = window.location.toString().split('?name=')[1].split('&')[0];
+        var bacteriaName = getUrlParameter('name');
         bacteriaSelector.value = bacteriaName;
+        document.title = bacteriaName;
 
         var viewSelector = document.getElementById('view-selector');
-        var view = window.location.toString().split('&view=')[1];
+        var view = getUrlParameter('view');
         viewSelector.value = view;
 
-        drawBacteriaData(d3.select('#bacteria-selector').property('value'), d3.select('#view-selector').property('value'));
+        drawBacteriaData(bacteriaName, view);
     }
 });
 
 var drawBacteriaData = function(bacteriaName, viewType) {
+    setUrlParameter('name', bacteriaName);
+    setUrlParameter('view', viewType);
+    document.title = bacteriaName;
+
     // Get center coordinates for loading circles animation
     var centerCoordinates = document.getElementById('svg').getScreenCTM();
 
@@ -554,6 +597,30 @@ var transpose = function(a) {
             return r[c];
         });
     });
+}
+
+var setUrlParameter = function(paramName, paramValue) {
+    var url = window.location.href;
+    if (url.indexOf(paramName + "=") >= 0) {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    } else {
+        if (url.indexOf("?") < 0)
+            url += "?" + paramName + "=" + paramValue;
+        else
+            url += "&" + paramName + "=" + paramValue;
+    }
+    window.history.pushState('', '', url);
+}
+
+var getUrlParameter = function(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 // Bacteria selector handler
