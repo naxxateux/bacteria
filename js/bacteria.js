@@ -1,9 +1,9 @@
 var margin = {
-    top: 100,
-    right: 100,
-    bottom: 100,
-    left: 100
-},
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100
+    },
     width = 1200 - margin.right - margin.left,
     height = 900 - margin.bottom - margin.top,
     maxRadius = height / 2,
@@ -30,44 +30,6 @@ var distance,
 
 var samples,
     allSamples;
-
-// Fill bacteria-selector
-d3.tsv('data/bacts.tsv', function(error, data) {
-    if (error) {
-        console.log(error);
-    } else {
-        data.forEach(function(bacteria) {
-            var placement;
-
-            if ($('#bacteria-selector optgroup[label=' + bacteria.phylum + ']').length === 0) {
-                $('#bacteria-selector').append('<optgroup label="' + bacteria.phylum + '">');
-            }
-            placement = $('optgroup[label=' + bacteria.phylum + ']');
-
-            if ($('#bacteria-selector optgroup[label=-' + bacteria.class + ']').length === 0) {
-                placement.append('<optgroup label="-' + bacteria.class + '">');
-            }
-            placement = $('optgroup[label=-' + bacteria.class + ']');
-
-            if ($('#bacteria-selector optgroup[label=--' + bacteria.order + ']').length === 0) {
-                placement.append('<optgroup label="--' + bacteria.order + '">');
-            }
-            placement = $('optgroup[label=--' + bacteria.order + ']');
-
-            if ($('#bacteria-selector optgroup[label=---' + bacteria.family + ']').length === 0) {
-                placement.append('<optgroup label="---' + bacteria.family + '">');
-            }
-            placement = $('optgroup[label=---' + bacteria.family + ']');
-
-            if ($('#bacteria-selector optgroup[label=----' + bacteria.genus + ']').length === 0) {
-                placement.append('<optgroup label="----' + bacteria.genus + '">');
-            }
-            placement = $('optgroup[label=----' + bacteria.genus + ']');
-
-            placement.append('<option label="' + bacteria.org + '">' + bacteria.org + '</option>');
-        });
-    }
-});
 
 // Read sample_info.tsv
 d3.tsv('data/sample_info.tsv', function(error, data) {

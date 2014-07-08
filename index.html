@@ -5,17 +5,22 @@
     <meta charset="utf-8">
     <title>Bacteria</title>
 
-    <script src='libs/jquery/jquery-2.1.1.min.js'></script>
-    <script src='libs/lodash/lodash.min.js'></script>
-
     <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' type='text/css' href='css/grid.css' />
+
+    <script src='libs/jquery/jquery-2.1.1.min.js'></script>
+    <script src='libs/lodash/lodash.min.js'></script>
 </head>
 
 <body>
     <div id='select-container'>
         <label for='view-selector'>View:</label>
         <select type='submit' id='view-selector'>
+            <option value='ALL'>All regions</option>
+            <option value='CHN'>China</option>
+            <option value='EUR'>Europe</option>
+            <option value='RUS'>Russia</option>
+            <option value='USA'>USA</option>
         </select>
     </div>
     <script src="js/fill-grid.js"></script>

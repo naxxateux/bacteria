@@ -47,13 +47,6 @@ var drawSelectedViewTypeGrid = function() {
     });
 }
 
-// Fill selector with options
-$('<option value="ALL">').appendTo('#view-selector').html('All regions');
-$('<option value="CHN">').appendTo('#view-selector').html('China');
-$('<option value="EUR">').appendTo('#view-selector').html('Europe');
-$('<option value="RUS">').appendTo('#view-selector').html('Russia');
-$('<option value="USA">').appendTo('#view-selector').html('USA');
-
 // Add change function to view selector
 $('#view-selector').change(function() {
     viewType = this.value;
