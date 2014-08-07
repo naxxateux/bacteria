@@ -5,12 +5,48 @@ height = b.execute_script('return screen.height;')
 b.driver.manage.window.move_to(0,0)
 b.driver.manage.window.resize_to(width,height)
 b.goto 'http://datalab/bacteria/bacteria.html?name=Acidaminococcus_intestini_RyC_MR95&view=ALL'
-sleep 3
+sleep 5
 s = b.select_list :id => 'bacteria-selector'
 opts = s.options.map(&:text)
 
 opts.each do |option|
 	s.select_value(option)
-	sleep 3
-	b.screenshot.save option + '.png'
+	sleep 10
+	b.screenshot.save 'ALL/' + option + '.png'
+end
+
+b.goto 'http://datalab/bacteria/bacteria.html?name=Acidaminococcus_intestini_RyC_MR95&view=CHN'
+sleep 5
+
+opts.each do |option|
+	s.select_value(option)
+	sleep 10
+	b.screenshot.save 'CHN/' + option + '.png'
+end
+
+b.goto 'http://datalab/bacteria/bacteria.html?name=Acidaminococcus_intestini_RyC_MR95&view=EUR'
+sleep 5
+
+opts.each do |option|
+	s.select_value(option)
+	sleep 10
+	b.screenshot.save 'EUR/' + option + '.png'
+end
+
+b.goto 'http://datalab/bacteria/bacteria.html?name=Acidaminococcus_intestini_RyC_MR95&view=RUS'
+sleep 5
+
+opts.each do |option|
+	s.select_value(option)
+	sleep 10
+	b.screenshot.save 'RUS/' + option + '.png'
+end
+
+b.goto 'http://datalab/bacteria/bacteria.html?name=Acidaminococcus_intestini_RyC_MR95&view=USA'
+sleep 5
+
+opts.each do |option|
+	s.select_value(option)
+	sleep 10
+	b.screenshot.save 'USA/' + option + '.png'
 end
