@@ -21,8 +21,7 @@ var addContent = function(i, view) {
 var drawSelectedViewTypeGrid = function() {
     $('#container').remove();
     $('body').append('<div id="container">');
-    var nOfPossibleRows = Math.ceil($(window).height() / imgHeight);
-    console.log(nOfPossibleRows);
+    var nOfPossibleRows = 5;
     $(function() {
         // Read the file names
         $.get('php/get_images.php?view=' + viewType, function(data) {
